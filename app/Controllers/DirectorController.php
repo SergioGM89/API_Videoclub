@@ -56,12 +56,6 @@ class DirectorController extends ResourceController{
                     array(
                         "rel" => "self",
                         "href" => $this->url("/DirectorController/".$row['id']),
-                        "action" => "PATCH",
-                        "types" => ["application/x-www-form-urlencoded"]
-                    ),
-                    array(
-                        "rel" => "self",
-                        "href" => $this->url("/DirectorController/".$row['id']),
                         "action" => "DELETE",
                         "types" => []
                     )
@@ -95,8 +89,7 @@ class DirectorController extends ResourceController{
     public function create(){
         $directores = new DirectorModel();
 
-        //if($this->validate('directores')){
-        if(true){
+        if($this->validate('directores')){
             
             $id = $directores->insert([
                 'nombre' => $this->request->getPost('nombre'),
@@ -114,14 +107,13 @@ class DirectorController extends ResourceController{
         return $this->genericResponse(null, $validation->getErrors(), 500);
     }
 
-    //Tipo PUT o PATCH: actualización de un recurso
+    //Tipo PUT: actualización de un recurso
     public function update($id = null){
         $directores = new DirectorModel();
         //Al ser un método de tipo PUT o PATCH debemos recoger los datos usando el método getRawInput
         $data = $this->request->getRawInput();
 
-        //if($this->validate('directores')){
-        if(true){
+        if($this->validate('directores')){
 
             if(!$directores->get($id)){
                 return $this->genericResponse(null, array("id" => "El director no existe"), 500);

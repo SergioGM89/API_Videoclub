@@ -33,9 +33,9 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->resource('peliculacontroller');
-$routes->resource('actorcontroller');
-$routes->resource('directorcontroller');
+$routes->resource('PeliculaController');
+$routes->resource('ActorController');
+$routes->resource('DirectorController');
 
 /*
  * --------------------------------------------------------------------

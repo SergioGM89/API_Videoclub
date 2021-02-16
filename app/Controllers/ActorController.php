@@ -56,12 +56,6 @@ class ActorController extends ResourceController{
                     array(
                         "rel" => "self",
                         "href" => $this->url("/ActorController/".$row['id']),
-                        "action" => "PATCH",
-                        "types" => ["application/x-www-form-urlencoded"]
-                    ),
-                    array(
-                        "rel" => "self",
-                        "href" => $this->url("/ActorController/".$row['id']),
                         "action" => "DELETE",
                         "types" => []
                     )
@@ -95,8 +89,7 @@ class ActorController extends ResourceController{
     public function create(){
         $actores = new ActorModel();
 
-        //if($this->validate('actores')){
-        if(true){
+        if($this->validate('actores')){
             
             $id = $actores->insert([
                 'nombre' => $this->request->getPost('nombre'),
@@ -114,14 +107,13 @@ class ActorController extends ResourceController{
         return $this->genericResponse(null, $validation->getErrors(), 500);
     }
 
-    //Tipo PUT o PATCH: actualización de un recurso
+    //Tipo PUT: actualización de un recurso
     public function update($id = null){
         $actores = new ActorModel();
         //Al ser un método de tipo PUT o PATCH debemos recoger los datos usando el método getRawInput
         $data = $this->request->getRawInput();
 
-        //if($this->validate('actores')){
-        if(true){
+        if($this->validate('actores')){
             
             if(!$actores->get($id)){
                 return $this->genericResponse(null, array("id" => "El actor no existe"), 500);

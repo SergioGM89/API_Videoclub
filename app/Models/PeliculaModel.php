@@ -10,15 +10,21 @@ class PeliculaModel extends Model{
     protected $primaryKey = 'id';
     protected $allowedFields = ['titulo', 'anyo', 'duracion'];
 
-    //Obtenemos todos los jugadores
+    //Obtenemos todas las peliculas
     public function getAll(){
-        $query = $this->query("SELECT p.*, d.nombre, a.nombre FROM peliculas AS p INNER JOIN directores AS d, actores AS a ON j.ID_equipo=e.id");
+        $query = $this->query("SELECT p.*, a.id_actor, act.nombre as nombre_actor, act.anyoNacimiento as anyoN_actor, act.pais as pais_actor, 
+        d.id_director, dir.nombre as nombre_director, dir.anyoNacimiento as anyoN_director, dir.pais as pais_director FROM peliculas AS p 
+        LEFT JOIN peliculas_actores AS a ON p.id=a.id_pelicula INNER JOIN peliculas_directores AS d ON p.id=d.id_pelicula 
+        LEFT JOIN actores AS act ON a.id_actor=act.id INNER JOIN directores AS dir ON d.id_director=dir.id");
         return $query->getResult('array');
     }
 
-    //Obtenemos un único jugador
+    //Obtenemos una única pelicula
     public function get($id){
-        $sql = "SELECT j.*, e.Ciudad, e.Conferencia, e.Division, e.Nombre AS Nombre_equipo FROM jugadores AS j INNER JOIN equipos AS e ON j.ID_equipo=e.id WHERE j.id=$id"; 
+        $sql = "SELECT p.*, a.id_actor, act.nombre as nombre_actor, act.anyoNacimiento as anyoN_actor, act.pais as pais_actor, 
+        d.id_director, dir.nombre as nombre_director, dir.anyoNacimiento as anyoN_director, dir.pais as pais_director FROM peliculas AS p 
+        LEFT JOIN peliculas_actores AS a ON p.id=a.id_pelicula INNER JOIN peliculas_directores AS d ON p.id=d.id_pelicula 
+        LEFT JOIN actores AS act ON a.id_actor=act.id INNER JOIN directores AS dir ON d.id_director=dir.id WHERE p.id=$id"; 
         $query = $this->query($sql, ['id' => $id]);
         return $query->getResult('array');
     }

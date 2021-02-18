@@ -2,6 +2,8 @@
 use App\Models\PeliculaModel;
 use App\Models\ActorModel;
 use App\Models\DirectorModel;
+use App\Models\PeliculaActorModel;
+use App\Models\PeliculaDirectorModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class PeliculaController extends ResourceController{
@@ -253,26 +255,45 @@ class PeliculaController extends ResourceController{
             }
             //Comprobamos los actores
             if($this->request->getPost('numActores') > 0){
+                
                 for($i=0; $i<($this->request->getPost('numActores')); $i++){
-                    if(!$this->request->getPost([actores][$i])){
-                        return $this->genericResponse(null, array("[actores][$i]" => "No se ha pasado el id del actor por parámetro."), 500);
+                    if(!$this->request->getPost("actores[$i]")){
+                        return $this->genericResponse(null, array("actores[$i]" => "No se ha pasado el id del actor por parámetro."), 500);
                     }
-                    if(!$actores->get($this->request->getPost([actores][$i]))){
-                        return $this->genericResponse(null, array("[actores][$i]" => "El actor no existe."), 500);
+                    if(!$actores->get($this->request->getPost("actores[$i]"))){
+                        return $this->genericResponse(null, array("actores[$i]" => "El actor no existe."), 500);
                     }
                 }
-                for($i=0; $i<($this->request->getPost('numActores')); $i++){
-                    $id_actor = $peliculas_act->insert([
-                        'id_pelicula' => $this->request->getPost('titulo'),
-                        'id_actor' => $this->request->getPost([actores][$i])
-                    ]);
+            }else{
+                return $this->genericResponse(null, array("numActores" => "No se ha pasado el número de actores o es menor a 1."), 500);
+            }
             
+            //Insertamos los datos en la tabla películas
             $id = $peliculas->insert([
                 'titulo' => $this->request->getPost('titulo'),
                 'anyo' => $this->request->getPost('anyo'),
                 'duracion' => $this->request->getPost('duracion')
             ]);
 
+            /*//Insertamos los datos en la tabla peliculas_directores
+                $peliculas_dir->insert([
+                'ìd_pelicula' => $id,
+                'id_director' => $this->request->getPost('id_director')
+            ]);*/
+                    $peliculas_dir->inserta($id, $this->request->getPost("id_director"));
+                    for($i=0; $i<($this->request->getPost('numActores')); $i++){
+                    $peliculas_act->inserta($id, $this->request->getPost("actores[$i]"));
+                    }
+
+            /*//Insertamos los datos en la tabla peliculas_actores
+            for($i=0; $i<($this->request->getPost('numActores')); $i++){
+                    $peliculas_act->insert([
+                    'ìd_pelicula' => $id,
+                    'id_actor' => $this->request->getPost("actores[$i]")
+                ]);
+            }*/
+
+            
             //Internamente $this->model hace referencia a $modelName = 'App\Models\PeliculaModel';
             return $this->genericResponse($this->model->find($id), null, 200);
         }
@@ -286,33 +307,20 @@ class PeliculaController extends ResourceController{
     //Tipo PUT: actualización de un recurso
     public function update($id = null){
         $peliculas = new PeliculaModel();
-        //$equipos = new EquipoModel();
+
         //Al ser un método de tipo PUT o PATCH debemos recoger los datos usando el método getRawInput
         $data = $this->request->getRawInput();
 
         //if($this->validate('peliculas')){
         if(true){
-            if(!$data['ID_equipo']){
-                return $this->genericResponse(null, array("ID_equipo" => "No se ha pasado el id del equipo por parámetro"), 500);
-            }
-
             if(!$peliculas->get($id)){
                 return $this->genericResponse(null, array("id" => "La pelicula no existe"), 500);
             }
 
-            /*if(!$equipos->get($data['ID_equipo'])){
-                return $this->genericResponse(null, array("ID_equipo" => "El equipo no existe"), 500);
-            }*/
-
             $peliculas->update($id, [
-                "Nombre" => $data['Nombre'],
-                "Anyo_Inicio" => $data['Anyo_Inicio'],
-                "Anyo_Fin" => $data['Anyo_Fin'],
-                "Posicion" => $data['Posicion'],
-                "Altura" => $data['Altura'],
-                "Peso" => $data['Peso'],
-                "Nacimiento" => $data['Nacimiento'],
-                "Procedencia" => $data['Procedencia']
+                "titulo" => $data['titulo'],
+                "anyo" => $data['anyo'],
+                "duracion" => $data['duracion']
             ]);
 
             return $this->genericResponse($this->model->find($id), null, 200);

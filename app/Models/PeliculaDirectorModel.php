@@ -4,23 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class JugadorModel extends Model{
+class PeliculaDirectorModel extends Model{
 
-    protected $table = 'jugadores';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['Nombre', 'ID_equipo', 'Anyo_Inicio', 'Anyo_Fin', 'Altura', 'Peso', 'Nacimiento', 'Procedencia'];
+    protected $table = 'peliculas_directores';
+    protected $primaryKey = 'id_pelicula';
+    protected $allowedFields = ['id_pelicula', 'id_director'];
 
-    //Obtenemos todos los jugadores
-    public function getAll(){
-        $query = $this->query("SELECT j.*, e.Ciudad, e.Conferencia, e.Division, e.Nombre AS Nombre_equipo FROM jugadores AS j INNER JOIN equipos AS e ON j.ID_equipo=e.id");
-        return $query->getResult('array');
-    }
-
-    //Obtenemos un único jugador
-    public function get($id){
-        $sql = "SELECT j.*, e.Ciudad, e.Conferencia, e.Division, e.Nombre AS Nombre_equipo FROM jugadores AS j INNER JOIN equipos AS e ON j.ID_equipo=e.id WHERE j.id=$id"; 
-        $query = $this->query($sql, ['id' => $id]);
-        return $query->getResult('array');
+    public function inserta($id_p, $id_d){
+        $sql = "insert into peliculas_directores values(:id_pel:, :id_dir:)";
+        $this->query($sql, ['id_pel' => $id_p, 'id_dir' => $id_d]);
     }
 }
 

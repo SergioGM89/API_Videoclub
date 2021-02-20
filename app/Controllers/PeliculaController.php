@@ -244,8 +244,7 @@ class PeliculaController extends ResourceController{
         $peliculas_dir = new PeliculaDirectorModel();
 
         //Validamos la película
-        //if($this->validate('peliculas')){
-        if(true){
+        if($this->validate('peliculas')){
             //Comprobamos el director
             if(!$this->request->getPost('id_director')){
                 return $this->genericResponse(null, array("id_director" => "No se ha pasado el id del director por parámetro."), 500);
@@ -275,23 +274,19 @@ class PeliculaController extends ResourceController{
                 'duracion' => $this->request->getPost('duracion')
             ]);
 
-            /*//Insertamos los datos en la tabla peliculas_directores
+            //Insertamos los datos en la tabla peliculas_directores
                 $peliculas_dir->insert([
-                'ìd_pelicula' => $id,
+                'id_pelicula' => $id,
                 'id_director' => $this->request->getPost('id_director')
-            ]);*/
-                    $peliculas_dir->inserta($id, $this->request->getPost("id_director"));
-                    for($i=0; $i<($this->request->getPost('numActores')); $i++){
-                    $peliculas_act->inserta($id, $this->request->getPost("actores[$i]"));
-                    }
+            ]);
 
-            /*//Insertamos los datos en la tabla peliculas_actores
+            //Insertamos los datos en la tabla peliculas_actores
             for($i=0; $i<($this->request->getPost('numActores')); $i++){
                     $peliculas_act->insert([
-                    'ìd_pelicula' => $id,
+                    'id_pelicula' => $id,
                     'id_actor' => $this->request->getPost("actores[$i]")
                 ]);
-            }*/
+            }
 
             
             //Internamente $this->model hace referencia a $modelName = 'App\Models\PeliculaModel';
@@ -311,8 +306,7 @@ class PeliculaController extends ResourceController{
         //Al ser un método de tipo PUT o PATCH debemos recoger los datos usando el método getRawInput
         $data = $this->request->getRawInput();
 
-        //if($this->validate('peliculas')){
-        if(true){
+        if($this->validate('peliculas')){
             if(!$peliculas->get($id)){
                 return $this->genericResponse(null, array("id" => "La pelicula no existe"), 500);
             }

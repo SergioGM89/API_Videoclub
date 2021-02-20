@@ -41,7 +41,11 @@ class Validation
 	// Rules
 	//--------------------------------------------------------------------
 
-	public $peliculas;
+	public $peliculas = [
+		'titulo' =>'required|min_length[3]|max_length[50]',
+		'anyo' => 'required|min_length[4]|max_length[4]',
+		'duracion' => 'required|min_length[2]|max_length[3]'
+	];
 
 	public $directores = [
 		'nombre' => 'required|min_length[3]|max_length[50]',
